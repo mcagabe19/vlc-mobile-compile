@@ -18,7 +18,7 @@ jobs:
       - name: Install Dependencies
         run: brew reinstall autoconf automake nasm libtool bison m4 ragel help2man meson ninja yasm protobuf
       - name: Apple libVLC Patches
-        run: cd vlc && git apply ../patches/*.patch
+        run: mv patches vlc/vlckitpatches && cd vlc && git apply vlckitpatches/*.patch
       - name: Compile libVLC
         run: |
           mkdir vlc/iOS
