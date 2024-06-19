@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  iOS:
+    runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [iPhone, iPhoneSim]
+    steps:
+      - name: Get VLC
+        run: git clone --depth=1 --recursive -b 3.0.21-1 https://code.videolan.org/videolan/vlc
+      - name: Compile
+        run: |
+          mkdir vlc/iOS
+          cd vlc/iOS
+          if [[ "${{ matrix.os }}" == "iPhone" ]] ; then
+            bash ../extras/package/apple/build.sh --arch=arm64 --disable-debug --sdk=$(xcodebuild -showsdks | grep 'iphoneos[0-9.]*' | awk '{print $NF}')
+          else
+            bash ../extras/package/apple/build.sh --arch=x86_64 --disable-debug --sdk=$(xcodebuild -showsdks | grep 'iphonesimulator[0-9.]*' | awk '{print $NF}')
+          fi
+      - name: Strip libvlc-full-static.a
+        run: strip vlc/iOS/static-lib/libvlc-full-static.a
+      - name: Upload libvlc-full-static.a
+        uses: actions/upload-artifact@main
+        with:
+          name: libvlc-full-static-${{ matrix.os }}
+          path: vlc/iOS/static-lib/libvlc-full-static.a
+          if-no-files-found: error
