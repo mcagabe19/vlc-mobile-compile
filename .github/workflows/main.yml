@@ -16,7 +16,7 @@ jobs:
       - name: Get VLC
         run: git clone https://code.videolan.org/videolan/vlc.git --depth=1 --recursive -b 3.0.21-1
       - name: Install Dependencies
-        run: brew install autoconf automake libtool bison m4 ragel help2man meson ninja yasm protobuf
+        run: brew install --force autoconf automake nasm libtool bison m4 ragel help2man meson ninja yasm protobuf
       - name: Compile
         run: |
           mkdir vlc/iOS
