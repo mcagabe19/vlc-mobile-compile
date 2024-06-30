@@ -10,4 +10,3 @@ index 9caceb3..76012b9 100755
 +VLC_TESTED_HASH=9c4768291ee0ce8e29fdadf3e05cbde2714bbe0c
  VLC_REPOSITORY=https://code.videolan.org/videolan/vlc.git
  VLC_BRANCH=3.0.x
- if [ ! -d "vlc" ]; then
