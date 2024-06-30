@@ -1,0 +1,12 @@
+diff --git a/extras/package/apple/build.conf b/extras/package/apple/build.conf
+index cb72bec..d818ae3 100644
+--- a/extras/package/apple/build.conf
++++ b/extras/package/apple/build.conf
+@@ -141,7 +141,6 @@ export VLC_MODULE_REMOVAL_LIST_BASE=(
+     speex_resampler
+     magnify
+     gradient
+-    visual
+     invert
+     sepia
+     wave
