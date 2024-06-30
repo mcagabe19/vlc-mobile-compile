@@ -30,22 +30,24 @@ jobs:
       - name: Setup libVLC
         run: sudo apt-get install gettext autopoint automake ant autopoint cmake build-essential libtool-bin lua5.2 liblua5.2-dev patch pkg-config protobuf-compiler ragel subversion unzip git flex python3 wget nasm meson ninja-build && git config --global user.name "GitHub Actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com" && cd libvlcjni && git apply ../libvlcjni-patches/* && buildsystem/get-vlc.sh
       - name: Compile libVLC
-        run: cd libvlcjni && buildsystem/compile-libvlc.sh -a ${{matrix.arch}} --no-jni --release
+        run: cd libvlcjni && buildsystem/compile-libvlc.sh -a ${{ matrix.arch }} --no-jni --release
         env:
            ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
            ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
-      - name: Upload Artifact
+      - name: Move libVLC
+        run: mv libvlcjni/libvlc/jni/libs/*/libvlc.so ~/libvlc-${{ matrix.arch }}.so
+      - name: Upload libVLC
         uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.arch }}
-          path: libvlcjni/libvlc/jni/libs/*/*.so
+          name: Android-${{ matrix.arch }}
+          path: ~/libvlc*.so
           if-no-files-found: error
   iOS:
     runs-on: macos-12
     strategy:
       fail-fast: false
       matrix:
-        os: [iPhone, iPhoneSim]
+        arch: [arm64, x86_64]
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -59,16 +61,18 @@ jobs:
         run: |
           mkdir vlc/iOS
           cd vlc/iOS
-          if [[ "${{ matrix.os }}" == "iPhone" ]] ; then
+          if [[ "${{ matrix.arch }}" == "arm64" ]] ; then
             bash ../extras/package/apple/build.sh --arch=arm64 --disable-debug --sdk=$(xcodebuild -showsdks | grep 'iphoneos[0-9.]*' | awk '{print $NF}')
           else
             bash ../extras/package/apple/build.sh --arch=x86_64 --disable-debug --sdk=$(xcodebuild -showsdks | grep 'iphonesimulator[0-9.]*' | awk '{print $NF}')
           fi
-      - name: Strip libvlc-full-static.a
-        run: strip vlc/iOS/static-lib/libvlc-full-static.a
-      - name: Upload libvlc-full-static.a
+      - name: Strip libVLC
+        run: |
+          strip vlc/iOS/static-lib/libvlc-full-static.a
+          mv vlc/iOS/static-lib/libvlc-full-static.a ~/libvlc-${{ matrix.arch }}.a
+      - name: Upload libVLC
         uses: actions/upload-artifact@main
         with:
-          name: libvlc-full-static-${{ matrix.os }}
-          path: vlc/iOS/static-lib/libvlc-full-static.a
+          name: iOS-${{ matrix.arch }}
+          path: ~/libvlc*.a
           if-no-files-found: error
