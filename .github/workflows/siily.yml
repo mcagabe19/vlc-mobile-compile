@@ -25,11 +25,11 @@ jobs:
         run: |
           mkdir vlc-2.1/iOS
           cd vlc-2.1/iOS
-          xcodebuild -showsdks
+          # xcodebuild -showsdks
           if [[ "${{ matrix.arch }}" == "arm64" ]] ; then
-            bash ../extras/package/ios/build.sh -a arm64  # -k $(xcodebuild -showsdks | grep 'iphoneos[0-9.]*' | sed -E 's/iphoneos([0-9.]+)/\1/')
+            bash ../extras/package/ios/build.sh -a arm64 -k 16.2
           else
-            bash ../extras/package/ios/build.sh -a x86_64  -k $(xcodebuild -showsdks | grep 'iphonesimulator[0-9.]*' | sed -E 's/iphonesimulator([0-9.]+)/\1/')
+            bash ../extras/package/ios/build.sh -a x86_64 -k 16.2
           fi
       - name: Strip libVLC
         run: |
