@@ -20,20 +20,20 @@ jobs:
       - name: Install Dependencies
         run: brew reinstall autoconf automake nasm libtool bison m4 ragel help2man meson ninja yasm protobuf
       - name: Apply libVLC Patches
-        run: cd vlc && git apply ../vlckit-2.2.x-patches/*.patch
+        run: cd vlc-2.1 && git apply ../vlckit-2.2.x-patches/*.patch
       - name: Compile libVLC
         run: |
-          mkdir vlc/iOS
-          cd vlc/iOS
+          mkdir vlc-2.1/iOS
+          cd vlc-2.1/iOS
           if [[ "${{ matrix.arch }}" == "arm64" ]] ; then
-            bash ../extras/package/apple/build.sh --arch=arm64 --disable-debug --sdk=$(xcodebuild -showsdks | grep 'iphoneos[0-9.]*' | awk '{print $NF}')
+            bash ../extras/package/ioa/build.sh -a arm64 -k $(xcodebuild -showsdks | grep 'iphoneos[0-9.]*' | awk '{print $NF}')
           else
-            bash ../extras/package/apple/build.sh --arch=x86_64 --disable-debug --sdk=$(xcodebuild -showsdks | grep 'iphonesimulator[0-9.]*' | awk '{print $NF}')
+            bash ../extras/package/ioa/build.sh -a x86_64 -k $(xcodebuild -showsdks | grep 'iphonesimulator[0-9.]*' | awk '{print $NF}')
           fi
       - name: Strip libVLC
         run: |
-          strip vlc/iOS/static-lib/libvlc-full-static.a
-          mv vlc/iOS/static-lib/libvlc-full-static.a ~/libvlc-${{ matrix.arch }}.a
+          strip vlc-2.1/iOS/static-lib/libvlc-full-static.a
+          mv vlc-2.1/iOS/static-lib/libvlc-full-static.a ~/libvlc-${{ matrix.arch }}.a
       - name: Upload libVLC
         uses: actions/upload-artifact@main
         with:
