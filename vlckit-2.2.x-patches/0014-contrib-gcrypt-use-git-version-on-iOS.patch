@@ -1,13 +1,13 @@
-From ebc498d0c3a43286815e0f8cd326daf8b4f4c39c Mon Sep 17 00:00:00 2001
+From 449046ffc930020837c351a83244f5c7c4ab110b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Felix=20Paul=20K=C3=BChne?= <fkuehne@videolan.org>
 Date: Thu, 31 Oct 2013 20:42:59 +0100
-Subject: [PATCH 13/18] contrib/gcrypt: use git version on iOS
+Subject: [PATCH 14/19] contrib/gcrypt: use git version on iOS
 
 ---
  contrib/src/gcrypt/disable-doc-compilation.patch   | 43 ++++++++++++++++++++++
- contrib/src/gcrypt/rules.mak                       | 14 ++++++-
+ contrib/src/gcrypt/rules.mak                       | 23 ++++++++----
  .../gcrypt/work-around-libtool-limitation.patch    | 25 +++++++++++++
- 3 files changed, 81 insertions(+), 1 deletion(-)
+ 3 files changed, 83 insertions(+), 8 deletions(-)
  create mode 100644 contrib/src/gcrypt/disable-doc-compilation.patch
  create mode 100644 contrib/src/gcrypt/work-around-libtool-limitation.patch
 
@@ -61,18 +61,18 @@ index 0000000..e63224e
 +1.8.3.4 (Apple Git-47)
 +
 diff --git a/contrib/src/gcrypt/rules.mak b/contrib/src/gcrypt/rules.mak
-index 6fa8b1e..ef297a1 100644
+index ae55695..44dfcab 100644
 --- a/contrib/src/gcrypt/rules.mak
 +++ b/contrib/src/gcrypt/rules.mak
 @@ -1,6 +1,7 @@
  # GCRYPT
- GCRYPT_VERSION := 1.6.4
+ GCRYPT_VERSION := 1.6.0
  GCRYPT_URL := ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(GCRYPT_VERSION).tar.bz2
 +GCRYPT_GITURL := git://git.gnupg.org/libgcrypt.git
  
  PKGS += gcrypt
  
-@@ -9,11 +10,22 @@ $(TARBALLS)/libgcrypt-$(GCRYPT_VERSION).tar.bz2:
+@@ -9,9 +10,20 @@ $(TARBALLS)/libgcrypt-$(GCRYPT_VERSION).tar.bz2:
  
  .sum-gcrypt: libgcrypt-$(GCRYPT_VERSION).tar.bz2
  
@@ -82,11 +82,9 @@ index 6fa8b1e..ef297a1 100644
 +ifndef HAVE_IOS
  libgcrypt: libgcrypt-$(GCRYPT_VERSION).tar.bz2 .sum-gcrypt
  	$(UNPACK)
- 	$(APPLY) $(SRC)/gcrypt/fix-amd64-assembly-on-solaris.patch
- 	$(APPLY) $(SRC)/gcrypt/0001-Fix-assembly-division-check.patch
  	$(MOVE)
 +else
-+libgcrypt: libgcrypt-git.tar.xz
++libgcrypt: libgcrypt-git.tar.xz .sum-gcrypt
 +	$(UNPACK)
 +	$(APPLY) $(SRC)/gcrypt/disable-doc-compilation.patch
 +	$(APPLY) $(SRC)/gcrypt/work-around-libtool-limitation.patch
@@ -95,11 +93,27 @@ index 6fa8b1e..ef297a1 100644
  
  DEPS_gcrypt = gpg-error
  
-@@ -47,6 +59,6 @@ endif
+@@ -22,12 +34,7 @@ GCRYPT_CONF = \
+ ifdef HAVE_WIN64
+ GCRYPT_CONF += --disable-asm
+ endif
+-ifdef HAVE_IOS
+-GCRYPT_EXTRA_CFLAGS = -fheinous-gnu-extensions
+-else
+-GCRYPT_EXTRA_CFLAGS =
+-endif
+-ifdef HAVE_MACOSX
++ifdef HAVE_DARWIN_OS
+ GCRYPT_CONF += --disable-aesni-support
+ else
+ ifdef HAVE_BSD
+@@ -41,7 +48,7 @@ endif
+ endif
  
  .gcrypt: libgcrypt
- 	$(RECONF)
+-	#$(RECONF)
 -	cd $< && $(HOSTVARS) CFLAGS="$(CFLAGS) $(GCRYPT_EXTRA_CFLAGS)" ./configure $(HOSTCONF) $(GCRYPT_CONF)
++	$(RECONF)
 +	cd $< && $(HOSTVARS) ./configure $(HOSTCONF) $(GCRYPT_CONF)
  	cd $< && $(MAKE) install
  	touch $@
@@ -135,5 +149,5 @@ index 0000000..df97ffb
 + AM_CFLAGS = $(GPG_ERROR_CFLAGS)
 + 
 -- 
-2.5.4 (Apple Git-61)
+1.8.3.4 (Apple Git-47)
 
