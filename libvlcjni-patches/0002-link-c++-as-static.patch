@@ -1,0 +1,13 @@
+diff --git a/buildsystem/compile-libvlc.sh b/buildsystem/compile-libvlc.sh
+index 58aeed2..08f375d 100755
+--- a/buildsystem/compile-libvlc.sh
++++ b/buildsystem/compile-libvlc.sh
+@@ -677,7 +677,7 @@ echo -e "ndk-build vlc"
+ touch $VLC_OUT_PATH/dummy.cpp
+ 
+ $NDK_BUILD -C $LIBVLCJNI_SRC_DIR/libvlc \
+-    APP_STL="c++_shared" \
++    APP_STL="c++_static" \
+     APP_CPPFLAGS="-frtti -fexceptions" \
+     VLC_SRC_DIR="$VLC_SRC_DIR" \
+     VLC_BUILD_DIR="$VLC_BUILD_DIR" \
