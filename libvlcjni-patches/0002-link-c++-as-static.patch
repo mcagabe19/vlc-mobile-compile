@@ -1,7 +1,16 @@
 diff --git a/buildsystem/compile-libvlc.sh b/buildsystem/compile-libvlc.sh
-index 58aeed2..08f375d 100755
+index 58aeed2..651134c 100755
 --- a/buildsystem/compile-libvlc.sh
 +++ b/buildsystem/compile-libvlc.sh
+@@ -543,7 +543,7 @@ if [ ${ANDROID_API} -lt "21" ] ; then
+     # force uselocale using libandroid_support since it's present in libc++
+     export ac_cv_func_uselocale=yes
+ 
+-    VLC_LDFLAGS="-landroid_support"
++    VLC_LDFLAGS="-landroid_support -lc++_static"
+ fi
+ 
+ # always use fixups for search.h and tdestroy
 @@ -677,7 +677,7 @@ echo -e "ndk-build vlc"
  touch $VLC_OUT_PATH/dummy.cpp
  
