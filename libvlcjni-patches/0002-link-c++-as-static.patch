@@ -1,5 +1,5 @@
 diff --git a/buildsystem/compile-libvlc.sh b/buildsystem/compile-libvlc.sh
-index 58aeed2..43d6671 100755
+index 58aeed2..20c06d2 100755
 --- a/buildsystem/compile-libvlc.sh
 +++ b/buildsystem/compile-libvlc.sh
 @@ -533,6 +533,8 @@ mkdir -p $VLC_BUILD_DIR
@@ -29,15 +29,6 @@ index 58aeed2..43d6671 100755
      CXX="${CROSS_CLANG}++" \
      NM="${CROSS_TOOLS}nm" \
      STRIP="${CROSS_TOOLS}strip" \
-@@ -663,7 +665,7 @@ rm ${REDEFINED_VLC_MODULES_DIR}/syms
- ###########################
- 
- VLC_MODULES=$(avlc_find_modules ${REDEFINED_VLC_MODULES_DIR})
--VLC_CONTRIB_LDFLAGS=$(for i in $(/bin/ls $VLC_CONTRIB/lib/pkgconfig/*.pc); do avlc_pkgconfig --libs $i; done |xargs)
-+compile-libvlc.sh=$(for i in $(/bin/ls $VLC_CONTRIB/lib/pkgconfig/*.pc); do avlc_pkgconfig --libs $i; done |xargs)
- 
- # Lua contrib doesn't expose a pkg-config file with libvlc 3.x and is
- # not probed by the previous command in VLC_CONTRIB_LDFLAGS, so probe
 @@ -677,7 +679,7 @@ echo -e "ndk-build vlc"
  touch $VLC_OUT_PATH/dummy.cpp
  
