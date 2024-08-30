@@ -6,7 +6,7 @@ index 58aeed2..6eddb13 100755
  # CONFIGURE #
  #############
  
-+VLC_LDFLAGS="-lc++_static"
++VLC_LDFLAGS="-lc++_static -static-libstdc++"
 +
  if [ ${ANDROID_API} -lt "26" ]; then
      # android APIs < 26 have empty sys/shm.h headers that triggers shm detection but it
