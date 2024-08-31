@@ -1,0 +1,13 @@
+diff --git a/extras/package/apple/build.conf b/extras/package/apple/build.conf
+index cb72bec33e..9aa008bbc6 100644
+--- a/extras/package/apple/build.conf
++++ b/extras/package/apple/build.conf
+@@ -89,7 +89,7 @@ export VLC_CONFIG_OPTIONS_BASE=(
+ export VLC_CONFIG_OPTIONS_MACOSX=()
+ 
+ # Additional configure options for iOS
+-export VLC_CONFIG_OPTIONS_IOS=()
++export VLC_CONFIG_OPTIONS_IOS=(--disable-specialaudio)
+ 
+ # Additional configure options for tvOS
+ export VLC_CONFIG_OPTIONS_TVOS=()
