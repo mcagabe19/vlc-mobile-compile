@@ -51,10 +51,12 @@ jobs:
         uses: actions/checkout@main
       - name: Get VLC
         run: git clone https://code.videolan.org/videolan/vlc.git --depth=1 --recursive -b 3.0.21-1
+      - name: Get VLCKit
+        run: cd .. && git clone https://code.videolan.org/videolan/vlckit.git --depth=1 --recursive -b 3.0
       - name: Install Dependencies
         run: brew reinstall autoconf automake nasm libtool bison m4 ragel help2man meson ninja yasm protobuf
       - name: Apply libVLC Patches
-        run: cd vlc && git apply ../vlckit-patches/*.patch
+        run: cd vlc && git apply ../vlckit/libvlc/patches/*.patch && git apply ../vlcios-patches/*.patch
       - name: Compile libVLC
         run: |
           mkdir vlc/iOS
